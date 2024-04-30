@@ -16,9 +16,9 @@ import (
 
 var (
 	// ErrUnsupportCmd is the error when got unsupport command
-	ErrUnsupportCmd = errors.New("Unsupport Command")
+	ErrUnsupportCmd = errors.New("unsupport Command")
 	// ErrUserPassAuth is the error when got invalid username or password
-	ErrUserPassAuth = errors.New("Invalid Username or Password for Auth")
+	ErrUserPassAuth = errors.New("invalid Username or Password for Auth")
 )
 
 // Server is socks5 server wrapper
@@ -326,14 +326,14 @@ func (h *DefaultHandle) UDPHandle(s *Server, addr *net.UDPAddr, d *Datagram) err
 	if s.LimitUDP {
 		any, ok := s.AssociatedUDP.Get(src)
 		if !ok {
-			return fmt.Errorf("This udp address %s is not associated with tcp", src)
+			return fmt.Errorf("this udp address %s is not associated with tcp", src)
 		}
 		ch = any.(chan byte)
 	}
 	send := func(ue *UDPExchange, data []byte) error {
 		select {
 		case <-ch:
-			return fmt.Errorf("This udp address %s is not associated with tcp", src)
+			return fmt.Errorf("this udp address %s is not associated with tcp", src)
 		default:
 			_, err := ue.RemoteConn.Write(data)
 			if err != nil {

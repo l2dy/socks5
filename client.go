@@ -221,7 +221,7 @@ func (c *Client) Negotiate(laddr net.Addr) error {
 		return err
 	}
 	if rp.Method != m {
-		return errors.New("Unsupport method")
+		return errors.New("unsupport method")
 	}
 	if m == MethodUsernamePassword {
 		urq := NewUserPassNegotiationRequest([]byte(c.UserName), []byte(c.Password))
@@ -248,7 +248,7 @@ func (c *Client) Request(r *Request) (*Reply, error) {
 		return nil, err
 	}
 	if rp.Rep != RepSuccess {
-		return nil, errors.New("Host unreachable")
+		return nil, errors.New("host unreachable")
 	}
 	return rp, nil
 }
