@@ -1,4 +1,4 @@
-module github.com/txthinking/socks5
+module github.com/l2dy/socks5
 
 go 1.16
 
