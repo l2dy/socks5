@@ -36,18 +36,28 @@ func ExampleClient_tcp() {
 			},
 		},
 	}
-	res, err := client.Get("https://ifconfig.co")
-	if err != nil {
-		log.Println(err)
-		return
+
+	var exampleURLs = []string{
+		"https://www.cloudflare.com/cdn-cgi/trace",
+		"https://1.0.0.1/cdn-cgi/trace",
+
+		// disabled until IPv6 is widely accessible
+		// "https://[2606:4700:4700::1001]/cdn-cgi/trace",
 	}
-	defer res.Body.Close()
-	b, err := io.ReadAll(res.Body)
-	if err != nil {
-		log.Println(err)
-		return
+	for _, url := range exampleURLs {
+		res, err := client.Get(url)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		defer res.Body.Close()
+		b, err := io.ReadAll(res.Body)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		log.Println("tcp", string(b))
 	}
-	log.Println("tcp", string(b))
 	// Output:
 }
 
