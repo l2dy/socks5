@@ -39,7 +39,7 @@ func (c *Client) Dial(network, addr string) (net.Conn, error) {
 // If you want to send address that expects to use to send UDP, just assign it to src, otherwise it will send zero address.
 // Recommend specifying the src address in a non-NAT environment, and leave it blank in other cases.
 func (c *Client) DialWithLocalAddr(network, src, dst string, remoteAddr net.Addr) (net.Conn, error) {
-	c = &Client{
+	conn := &Client{
 		Server:        c.Server,
 		UserName:      c.UserName,
 		Password:      c.Password,
@@ -57,7 +57,7 @@ func (c *Client) DialWithLocalAddr(network, src, dst string, remoteAddr net.Addr
 				return nil, err
 			}
 		}
-		if err := c.Negotiate(laddr); err != nil {
+		if err := conn.Negotiate(laddr); err != nil {
 			return nil, err
 		}
 		a, h, p, err := ParseAddress(dst)
@@ -67,10 +67,10 @@ func (c *Client) DialWithLocalAddr(network, src, dst string, remoteAddr net.Addr
 		if a == ATYPDomain {
 			h = h[1:]
 		}
-		if _, err := c.Request(NewRequest(CmdConnect, a, h, p)); err != nil {
+		if _, err := conn.Request(NewRequest(CmdConnect, a, h, p)); err != nil {
 			return nil, err
 		}
-		return c, nil
+		return conn, nil
 	}
 	if network == "udp" {
 		var laddr net.Addr
@@ -80,7 +80,7 @@ func (c *Client) DialWithLocalAddr(network, src, dst string, remoteAddr net.Addr
 				return nil, err
 			}
 		}
-		if err := c.Negotiate(laddr); err != nil {
+		if err := conn.Negotiate(laddr); err != nil {
 			return nil, err
 		}
 
@@ -94,20 +94,20 @@ func (c *Client) DialWithLocalAddr(network, src, dst string, remoteAddr net.Addr
 				h = h[1:]
 			}
 		}
-		rp, err := c.Request(NewRequest(CmdUDP, a, h, p))
+		rp, err := conn.Request(NewRequest(CmdUDP, a, h, p))
 		if err != nil {
 			return nil, err
 		}
-		c.UDPConn, err = DialUDP("udp", src, rp.Address())
+		conn.UDPConn, err = DialUDP("udp", src, rp.Address())
 		if err != nil {
 			return nil, err
 		}
-		if c.UDPTimeout != 0 {
-			if err := c.UDPConn.SetDeadline(time.Now().Add(time.Duration(c.UDPTimeout) * time.Second)); err != nil {
+		if conn.UDPTimeout != 0 {
+			if err := conn.UDPConn.SetDeadline(time.Now().Add(time.Duration(conn.UDPTimeout) * time.Second)); err != nil {
 				return nil, err
 			}
 		}
-		return c, nil
+		return conn, nil
 	}
 	return nil, errors.New("unsupport network")
 }
