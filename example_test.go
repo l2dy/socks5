@@ -7,12 +7,12 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/miekg/dns"
 	"github.com/l2dy/socks5"
+	"github.com/miekg/dns"
 )
 
 func ExampleServer() {
-	s, err := socks5.NewClassicServer("127.0.0.1:1080", "127.0.0.1", "", "", 0, 60)
+	s, err := socks5.NewClassicServer("127.0.0.1:1080", "127.0.0.1", "user", "password", 0, 60)
 	if err != nil {
 		log.Println(err)
 		return
@@ -24,7 +24,7 @@ func ExampleServer() {
 
 func ExampleClient_tcp() {
 	go ExampleServer()
-	c, err := socks5.NewClient("127.0.0.1:1080", "", "", 0, 60)
+	c, err := socks5.NewClient("127.0.0.1:1080", "user", "password", 60, 60)
 	if err != nil {
 		log.Println(err)
 		return
@@ -53,7 +53,7 @@ func ExampleClient_tcp() {
 
 func ExampleClient_udp() {
 	go ExampleServer()
-	c, err := socks5.NewClient("127.0.0.1:1080", "", "", 0, 60)
+	c, err := socks5.NewClient("127.0.0.1:1080", "user", "password", 60, 60)
 	if err != nil {
 		log.Println(err)
 		return
