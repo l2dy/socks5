@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"net"
 	"strings"
@@ -310,7 +309,7 @@ func (h *DefaultHandle) TCPHandle(s *Server, c *net.TCPConn, r *Request) error {
 		defer close(ch)
 		s.AssociatedUDP.Set(caddr.String(), ch, -1)
 		defer s.AssociatedUDP.Delete(caddr.String())
-		io.Copy(ioutil.Discard, c)
+		io.Copy(io.Discard, c)
 		if Debug {
 			log.Printf("A tcp connection that udp %#v associated closed\n", caddr.String())
 		}
