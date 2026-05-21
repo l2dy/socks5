@@ -84,7 +84,7 @@ func (c *Client) DialWithLocalAddr(network, src, dst string, remoteAddr net.Addr
 			return nil, err
 		}
 
-		a, h, p := ATYPIPv4, net.IPv4zero, []byte{0x00, 0x00}
+		a, h, p := ATYPIPv4, []byte{0x00, 0x00, 0x00, 0x00}, []byte{0x00, 0x00}
 		if src != "" {
 			a, h, p, err = ParseAddress(src)
 			if err != nil {
@@ -153,6 +153,9 @@ func (c *Client) Write(b []byte) (int, error) {
 
 func (c *Client) Close() error {
 	if c.UDPConn == nil {
+		if c.TCPConn == nil {
+			return nil
+		}
 		return c.TCPConn.Close()
 	}
 	if c.TCPConn != nil {
